@@ -1,9 +1,12 @@
 <?php
+//include("../includes/mysql.inc.php");
+//$mysqli = new mysqli("localhost", "cc08668_osnews", "Pm21Pm21Pm21", "cc08668_osnews");
 
 $mainPageXpath = getXpath('https://iryston.tv/category/news/');
-foreach ($mainPageXpath->query("//div[contains(@class, 'first_news_block')]//ul[contains(@class, 'cbp_tmtimeline')]") as $item) {
+foreach ($mainPageXpath->query("//div[contains(@class, 'first_news_block')]//ul[contains(@class, 'cbp_tmtimeline')]//a") as $item) {
   $title = $mainPageXpath->query(".//time[contains(@class, 'cbp_tmtime')]//h4", $item);
-  $date = $mainPageXpath->query(".//time[contains(@class, 'cbp_tmtime')]//div[contains(@class, 'date')]", $item);
+  $date = $mainPageXpath->query(".//time[contains(@class, 'cbp_tmtime')]//div[contains(@class, 'date')]", $item)[0]->textContent;
+  $dateText = date("Y-m-d H:i:s ", strtotime($date));
 
   $image = $mainPageXpath->query(".//div[contains(@class, 'photo-content')]", $item);
   $image_url = $image[0]->getAttribute('style');
@@ -11,21 +14,22 @@ foreach ($mainPageXpath->query("//div[contains(@class, 'first_news_block')]//ul[
     $image_url = getUrl($image_url);
   }
 
-  $link = $mainPageXpath->query(".//a", $item);
-  $newsUrl = $link[0]->getAttribute('href');
+  $newsUrl = $item->getAttribute('href');
 
-  $newsText = null;
+  $newsText = "";
   $articleXpath = getXpath($newsUrl);
-  foreach($articleXpath->query("//div[contains(@class, 'news_full_text')]//p") as $key => $articleElement) {
-    if($key == 0)
-      	continue;
-    $newsText .= $articleElement->textContent."\n";
+  foreach($articleXpath->query("//div[contains(@class, 'news_full_text')]//p") as $text) {
+    $newsText .= $text->textContent . "\n";
   }
 
-  echo "<h3>{$title[0]->textContent}</h3>";
-  echo "<div><img src=\"{$image_url}\"></div>";
-  echo $date[0]->textContent."\n";
-  echo $newsText;
+  // echo "<h3>{$title[0]->textContent}</h3>";
+  // echo "<div><img src=\"{$image_url}\"></div>";
+  // echo $dateText."\n";
+  // echo "<p>{$newsText}</p>";
+
+  // $mysqli->query("INSERT INTO `news`
+  // (`website_id`,`title`,`date`,`text`,`img`,`url`)
+  // VALUES (5, '{$title}', '{$dateText}', '{$newsText}', '{$image_url}','{$newsUrl}')");
 }
 
 function getXpath($url) {
