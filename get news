@@ -1,0 +1,7 @@
+<?php
+
+$mysqli = new mysqli("localhost", "root", "", "osetianews");
+
+$news = "SELECT * FROM `news` WHERE `website_id` = 5";
+$arr = $mysqli->query($news);
+echo $news;
