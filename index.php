@@ -1,6 +1,5 @@
 <?php
-//include("../includes/mysql.inc.php");
-//$mysqli = new mysqli("localhost", "cc08668_osnews", "Pm21Pm21Pm21", "cc08668_osnews");
+//$mysqli = new mysqli("localhost", "root", "", "osetianews");
 
 $mainPageXpath = getXpath('https://iryston.tv/category/news/');
 foreach ($mainPageXpath->query("//div[contains(@class, 'first_news_block')]//ul[contains(@class, 'cbp_tmtimeline')]//a") as $item) {
